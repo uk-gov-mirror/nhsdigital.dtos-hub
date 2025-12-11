@@ -1,7 +1,6 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-
   "parameters": {
     "location": {
       "type": "string",
@@ -23,57 +22,58 @@
       "type": "string"
     }
   },
-
   "resources": [
-{
-  "type": "Microsoft.VirtualMachineImages/imageTemplates",
-  "apiVersion": "2022-02-01",
-  "dependsOn": [],
-  "properties": {
-    "buildTimeoutInMinutes": 120,
-    "vmProfile": {
-      "vmSize": "Standard_D4s_v5"
-    },
-    "source": {
-      "type": "PlatformImage",
-      "publisher": "microsoftwindowsdesktop",
-      "offer": "windows-11",
-      "sku": "win11-23h2-avd",
-      "version": "latest"
-    },
-    "customize": [
-      {
-        "type": "PowerShell",
-        "name": "InstallSoftware",
-        "scriptUri": "[parameters('installScriptUrl')]"
-      },
-      {
-        "type": "WindowsRestart",
-        "name": "RestartAfterInstalls"
-      },
-      {
-        "type": "PowerShell",
-        "name": "PostConfig",
-        "inline": [
-          "Write-Host 'Final post-configuration step completed.'"
-        ]
-      }
-    ],
-    "distribute": [
-      {
-        "type": "SharedImage",
-        "galleryImageId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroup')]/providers/Microsoft.Compute/galleries/[parameters('galleryName')]/images/[parameters('imageDefinitionName')]",
-        "runOutputName": "golden-avd-image",
-        "artifactTags": {
-          "image_builder": "true",
-          "base": "win11-23h2-avd"
+    {
+      "type": "Microsoft.VirtualMachineImages/imageTemplates",
+      "apiVersion": "2022-02-01",
+      "name": "[concat('aib-', parameters('imageDefinitionName'))]",
+      "location": "[parameters('location')]",
+      "dependsOn": [],
+      "properties": {
+        "buildTimeoutInMinutes": 120,
+        "vmProfile": {
+          "vmSize": "Standard_D4s_v5"
         },
-        "replicationRegions": [
-          "[parameters('location')]"
+        "source": {
+          "type": "PlatformImage",
+          "publisher": "microsoftwindowsdesktop",
+          "offer": "windows-11",
+          "sku": "win11-23h2-avd",
+          "version": "latest"
+        },
+        "customize": [
+          {
+            "type": "PowerShell",
+            "name": "InstallSoftware",
+            "scriptUri": "[parameters('installScriptUrl')]"
+          },
+          {
+            "type": "WindowsRestart",
+            "name": "RestartAfterInstalls"
+          },
+          {
+            "type": "PowerShell",
+            "name": "PostConfig",
+            "inline": [
+              "Write-Host 'Final post-configuration step completed.'"
+            ]
+          }
+        ],
+        "distribute": [
+          {
+            "type": "SharedImage",
+            "galleryImageId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourceGroup'), '/providers/Microsoft.Compute/galleries/', parameters('galleryName'), '/images/', parameters('imageDefinitionName'))]",
+            "runOutputName": "golden-avd-image",
+            "artifactTags": {
+              "image_builder": "true",
+              "base": "win11-23h2-avd"
+            },
+            "replicationRegions": [
+              "[parameters('location')]"
+            ]
+          }
         ]
       }
-    ]
-  }
-}
-]
+    }
+  ]
 }
