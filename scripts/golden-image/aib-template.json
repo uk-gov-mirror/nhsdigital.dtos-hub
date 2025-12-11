@@ -45,7 +45,7 @@
       {
         "type": "PowerShell",
         "name": "InstallSoftware",
-        "scriptUri": "<installScriptUrl>"
+        "scriptUri": "[parameters('installScriptUrl')]"
       },
       {
         "type": "WindowsRestart",
@@ -62,7 +62,7 @@
     "distribute": [
       {
         "type": "SharedImage",
-        "galleryImageId": "/subscriptions/<subscriptionId>/resourceGroups/<resourceGroup>/providers/Microsoft.Compute/galleries/<galleryName>/images/<imageDefinitionName>",
+        "galleryImageId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroup')]/providers/Microsoft.Compute/galleries/[parameters('galleryName')]/images/[parameters('imageDefinitionName')]",
         "runOutputName": "golden-avd-image",
         "artifactTags": {
           "image_builder": "true",

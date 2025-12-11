@@ -29,6 +29,8 @@ variables:
     value: 'avd-golden-image'
   - name: TEMPLATE_FILE
     value: 'scripts/golden-image/aib-template.json'
+  - name: INSTALL_SCRIPT_URL
+    value: 'scripts/golden-image/install-software.ps1'
 
 stages:
 - stage: BuildImage
@@ -71,7 +73,15 @@ stages:
             --resource-group "$(RESOURCE_GROUP)" \
             --name "$(TEMPLATE_NAME)" \
             --image-template @"$(TEMPLATE_FILE)" \
-            --location "$(LOCATION)"
+            --location "$(LOCATION)" \
+            --installScriptUrl="$(INSTALL_SCRIPT_URL)" \
+            --resourceGroup="$(RESOURCE_GROUP)" \
+            --subscription="$(SUBSCRIPTION_ID)" \
+            --galleryName="DTOS-AVD-Golden-Images" \
+            --imageDefinitionName="DTOS-AVD-Golden-Image"
+
+
+
 
           echo "Running AIB image build..."
           az image builder run \
