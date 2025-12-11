@@ -1,7 +1,12 @@
 {
   "type": "Microsoft.VirtualMachineImages/imageTemplates",
   "apiVersion": "2022-02-01",
-  "location": "<location>",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "uksouth"
+    }
+  },
   "dependsOn": [],
   "properties": {
     "buildTimeoutInMinutes": 120,

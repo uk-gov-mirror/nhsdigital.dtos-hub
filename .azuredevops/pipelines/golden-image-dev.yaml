@@ -61,6 +61,7 @@ stages:
           echo "Running AIB image build..."
           az image builder run \
             --resource-group $(RESOURCE_GROUP) \
-            --name $(TEMPLATE_NAME)
+            --name $(TEMPLATE_NAME)  \
+            --location $(LOCATION)
 
           echo "Build complete."
