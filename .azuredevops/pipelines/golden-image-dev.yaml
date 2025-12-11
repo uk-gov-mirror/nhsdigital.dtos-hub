@@ -22,7 +22,7 @@ variables:
   - name: ENVIRONMENT
     value: development
   - name: RESOURCE_GROUP
-    value: 'rg-avd-image-build'
+    value: 'RG-HUB-DEV-UKS-HUB-VIRTUAL-DESKTOP'
   - name: LOCATION
     value: 'uksouth'
   - name: TEMPLATE_NAME
@@ -47,7 +47,7 @@ stages:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          az extension add --name image-builder --yes
+          az extension add --name image --yes
 
           echo "Submitting AIB template..."
           az resource create \
