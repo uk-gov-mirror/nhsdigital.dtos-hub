@@ -52,6 +52,9 @@ stages:
           echo "=== az version ==="
           az --version
 
+          echo "Reading and displaying AIB template file: $(TEMPLATE_FILE)"
+          ls -l "$(TEMPLATE_FILE)"
+
           echo "Check if 'az image builder' is available..."
           if az image builder -h >/dev/null 2>&1; then
             echo "az image builder is available"
