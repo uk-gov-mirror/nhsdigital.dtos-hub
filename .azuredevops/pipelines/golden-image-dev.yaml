@@ -68,6 +68,9 @@ stages:
           echo "Registering provider Microsoft.VirtualMachineImages (safe to run if already registered)..."
           az provider register -n Microsoft.VirtualMachineImages
 
+          echo "TARGET_SUBSCRIPTION_ID."
+          echo $(TF_VAR_TARGET_SUBSCRIPTION_ID)
+
           echo "Submitting AIB template with az image builder create..."
           az image builder create \
             --resource-group "$(RESOURCE_GROUP)" \
@@ -76,7 +79,7 @@ stages:
             --location "$(LOCATION)" \
             --installScriptUrl="$(INSTALL_SCRIPT_URL)" \
             --resourceGroup="$(RESOURCE_GROUP)" \
-            --subscription="$(SUBSCRIPTION_ID)" \
+            --subscription="$(TF_VAR_TARGET_SUBSCRIPTION_ID)" \
             --galleryName="DTOS-AVD-Golden-Images" \
             --imageDefinitionName="DTOS-AVD-Golden-Image"
 
