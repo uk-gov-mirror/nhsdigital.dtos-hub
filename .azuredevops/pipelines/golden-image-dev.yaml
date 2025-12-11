@@ -16,12 +16,19 @@ pool:
 #       ref: feat/DTOSS-8488-Automate-AVD-Golden-Image-Creation-and-Maintenance
 #       endpoint: NHSDigital
 
-
 variables:
-  RESOURCE_GROUP: 'rg-avd-image-build'
-  LOCATION: 'uksouth'
-  TEMPLATE_NAME: 'avd-golden-image'
-  TEMPLATE_FILE: 'scripts/golden-image/aib-template.json'
+  - group: DEV_agent_backend
+  - group: DEV_hub_backend_remote_state
+  - name: ENVIRONMENT
+    value: development
+  - name: RESOURCE_GROUP
+    value: 'rg-avd-image-build'
+  - name: LOCATION
+    value: 'uksouth'
+  - name: TEMPLATE_NAME
+    value: 'avd-golden-image'
+  - name: TEMPLATE_FILE
+    value: 'scripts/golden-image/aib-template.json'
 
 stages:
 - stage: BuildImage
