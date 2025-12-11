@@ -1,0 +1,59 @@
+---
+
+name: $(Build.SourceBranchName)-$(Date:yyyyMMdd)_$(Rev:r)
+trigger: none
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+  # name: private-pool-dev-uks
+
+# resources:
+#   repositories:
+#     - repository: dtos-devops-templates
+#       type: github
+#       name: NHSDigital/dtos-devops-templates
+#       ref: feat/DTOSS-8488-Automate-AVD-Golden-Image-Creation-and-Maintenance
+#       endpoint: NHSDigital
+
+
+variables:
+  RESOURCE_GROUP: 'rg-avd-image-build'
+  LOCATION: 'uksouth'
+  TEMPLATE_NAME: 'avd-golden-image'
+  TEMPLATE_FILE: 'scripts/golden-image/aib-template.json'
+
+stages:
+- stage: BuildImage
+  displayName: Build AVD Golden Image
+  jobs:
+  - job: Build
+    displayName: Run Azure Image Builder
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: self
+
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(SERVICE_CONNECTION)
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az extension add --name image-builder --yes
+
+          echo "Submitting AIB template..."
+          az resource create \
+            --resource-group $(RESOURCE_GROUP) \
+            --name $(TEMPLATE_NAME) \
+            --resource-type Microsoft.VirtualMachineImages/imageTemplates \
+            --is-full-object \
+            --properties @"$(TEMPLATE_FILE)" \
+            --location $(LOCATION)
+
+          echo "Running AIB image build..."
+          az image builder run \
+            --resource-group $(RESOURCE_GROUP) \
+            --name $(TEMPLATE_NAME)
+
+          echo "Build complete."
