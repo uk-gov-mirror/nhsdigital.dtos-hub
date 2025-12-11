@@ -29,10 +29,7 @@
       "name": "[concat('aib-', parameters('imageDefinitionName'))]",
       "location": "[parameters('location')]",
       "identity": {
-        "type": "UserAssigned",
-        "userAssignedIdentities": {
-          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'aib-identity')]": {}
-        }
+        "type": "SystemAssigned"
       },
       "dependsOn": [],
       "properties": {
