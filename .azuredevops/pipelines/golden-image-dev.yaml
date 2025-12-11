@@ -71,17 +71,29 @@ stages:
           echo "TARGET_SUBSCRIPTION_ID."
           echo $(TF_VAR_TARGET_SUBSCRIPTION_ID)
 
-          echo "Submitting AIB template with az image builder create..."
-          az image builder create \
-            --resource-group "$(RESOURCE_GROUP)" \
-            --name "$(TEMPLATE_NAME)" \
-            --image-template @"$(TEMPLATE_FILE)" \
-            --location "$(LOCATION)" \
-            --installScriptUrl="$(INSTALL_SCRIPT_URL)" \
-            --resourceGroup="$(RESOURCE_GROUP)" \
-            --subscription="$(TF_VAR_TARGET_SUBSCRIPTION_ID)" \
-            --galleryName="DTOS-AVD-Golden-Images" \
-            --imageDefinitionName="DTOS-AVD-Golden-Image"
+          echo "Deploying ARM template for AIB..."
+          az deployment group create \
+          --resource-group $(RESOURCE_GROUP) \
+          --template-file $(TEMPLATE_FILE) \
+          --parameters \
+              location=$(LOCATION) \
+              installScriptUrl=$(INSTALL_SCRIPT_URL) \
+              subscriptionId=$(TF_VAR_TARGET_SUBSCRIPTION_ID) \
+              resourceGroup=$(RESOURCE_GROUP) \
+              galleryName="DTOS-AVD-Golden-Images" \
+              imageDefinitionName="DTOS-AVD-Golden-Image"
+
+          # echo "Submitting AIB template with az image builder create..."
+          # az image builder create \
+          #   --resource-group "$(RESOURCE_GROUP)" \
+          #   --name "$(TEMPLATE_NAME)" \
+          #   --image-template @"$(TEMPLATE_FILE)" \
+          #   --location "$(LOCATION)" \
+          #   --installScriptUrl="$(INSTALL_SCRIPT_URL)" \
+          #   --resourceGroup="$(RESOURCE_GROUP)" \
+          #   --subscription="$(TF_VAR_TARGET_SUBSCRIPTION_ID)" \
+          #   --galleryName="DTOS-AVD-Golden-Images" \
+          #   --imageDefinitionName="DTOS-AVD-Golden-Image"
 
 
 
