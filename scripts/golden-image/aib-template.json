@@ -1,12 +1,33 @@
 {
-  "type": "Microsoft.VirtualMachineImages/imageTemplates",
-  "apiVersion": "2022-02-01",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
   "parameters": {
     "location": {
       "type": "string",
       "defaultValue": "uksouth"
+    },
+    "installScriptUrl": {
+      "type": "string"
+    },
+    "subscriptionId": {
+      "type": "string"
+    },
+    "resourceGroup": {
+      "type": "string"
+    },
+    "galleryName": {
+      "type": "string"
+    },
+    "imageDefinitionName": {
+      "type": "string"
     }
   },
+
+  "resources": [
+{
+  "type": "Microsoft.VirtualMachineImages/imageTemplates",
+  "apiVersion": "2022-02-01",
   "dependsOn": [],
   "properties": {
     "buildTimeoutInMinutes": 120,
@@ -48,9 +69,11 @@
           "base": "win11-23h2-avd"
         },
         "replicationRegions": [
-          "<location>"
+          "[parameters('location')]"
         ]
       }
     ]
   }
+}
+]
 }
