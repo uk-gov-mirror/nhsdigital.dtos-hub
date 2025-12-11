@@ -47,21 +47,32 @@ stages:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          az extension add --name image --yes
+          set -euo pipefail
 
-          echo "Submitting AIB template..."
-          az resource create \
-            --resource-group $(RESOURCE_GROUP) \
-            --name $(TEMPLATE_NAME) \
-            --resource-type Microsoft.VirtualMachineImages/imageTemplates \
-            --is-full-object \
-            --properties @"$(TEMPLATE_FILE)" \
-            --location $(LOCATION)
+          echo "=== az version ==="
+          az --version
+
+          echo "Check if 'az image builder' is available..."
+          if az image builder -h >/dev/null 2>&1; then
+            echo "az image builder is available"
+          else
+            echo "az image builder not found. Trying az upgrade (may require permission)..."
+            az upgrade --yes || echo "az upgrade failed or not permitted - continuing anyway"
+          fi
+
+          echo "Registering provider Microsoft.VirtualMachineImages (safe to run if already registered)..."
+          az provider register -n Microsoft.VirtualMachineImages
+
+          echo "Submitting AIB template with az image builder create..."
+          az image builder create \
+            --resource-group "$(RESOURCE_GROUP)" \
+            --name "$(TEMPLATE_NAME)" \
+            --image-template @"$(TEMPLATE_FILE)" \
+            --location "$(LOCATION)"
 
           echo "Running AIB image build..."
           az image builder run \
-            --resource-group $(RESOURCE_GROUP) \
-            --name $(TEMPLATE_NAME)
-            # --location $(LOCATION)
+            --resource-group "$(RESOURCE_GROUP)" \
+            --name "$(TEMPLATE_NAME)"
 
           echo "Build complete."
