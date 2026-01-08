@@ -88,17 +88,19 @@ module "virtual-desktop-v2" {
   host_pool_name        = "${module.config[each.key].names.avd-host-pool}-v2"
   location              = each.key
 
-  entra_users_group_id = (
-    local.green_avd_primary
-    ? data.azuread_group.avd_users.id
-    : data.azuread_group.avd_platform_users.id
-  )
+  entra_users_group_id = data.azuread_group.avd_users.id
+  # (
+  #   local.green_avd_primary
+  #   ? data.azuread_group.avd_users.id
+  #   : data.azuread_group.avd_platform_users.id
+  # )
 
   entra_admins_group_id = (
     local.green_avd_primary
     ? data.azuread_group.avd_admins.id
     : data.azuread_group.avd_platform_users.id
   )
+
   maximum_sessions_allowed  = var.avd_maximum_sessions_allowed
   resource_group_name       = azurerm_resource_group.avd-v2[each.key].name
   resource_group_id         = azurerm_resource_group.avd-v2[each.key].id
